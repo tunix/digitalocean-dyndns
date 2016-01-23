@@ -1,6 +1,6 @@
 # Dynamic DNS using DigitalOcean's DNS Services
 
-A script that pushes the public IP address of the running machine to DigitalOcean's DNS API's. It requires an existing A record to update.
+A script that pushes the public IP address of the running machine to DigitalOcean's DNS API's. It requires an existing A record to update. The resulting container image is roughly around 7 MB (thanks to Alpine Linux).
 
 ## Setup
 
@@ -20,11 +20,11 @@ Pick one of the options below using the following settings:
 ```
 $ docker pull tunix/digitalocean-dyndns
 $ docker run -d --name dyndns \
-  -e DIGITALOCEAN_TOKEN="your_token_here" \
-  -e DOMAIN="yourdomain.com" \
-  -e NAME="subdomain" \
-  -e SLEEP_INTERVAL=2 \
-  tunix/digitalocean-dyndns
+    -e DIGITALOCEAN_TOKEN="your_token_here" \
+    -e DOMAIN="yourdomain.com" \
+    -e NAME="subdomain" \
+    -e SLEEP_INTERVAL=2 \
+    tunix/digitalocean-dyndns
 ```
 
 ### Manual
