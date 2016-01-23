@@ -19,7 +19,12 @@ Pick one of the options below using the following settings:
 
 ```
 $ docker pull tunix/digitalocean-dyndns
-$ docker run -d --name dyndns -e DIGITALOCEAN_TOKEN="your_token_here" -e DOMAIN="yourdomain.com" -e NAME="subdomain" -e SLEEP_INTERVAL=2 tunix/digitalocean-dyndns
+$ docker run -d --name dyndns \
+  -e DIGITALOCEAN_TOKEN="your_token_here" \
+  -e DOMAIN="yourdomain.com" \
+  -e NAME="subdomain" \
+  -e SLEEP_INTERVAL=2 \
+  tunix/digitalocean-dyndns
 ```
 
 ### Manual
