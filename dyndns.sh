@@ -13,15 +13,16 @@ test -z $DOMAIN && die "DOMAIN not set!"
 test -z $NAME && die "NAME not set!"
 
 dns_list="$api_host/domains/$DOMAIN/records"
-domain_records=$(curl -s -X GET \
-    -H "Content-Type: application/json" \
-    -H "Authorization: Bearer $DIGITALOCEAN_TOKEN" \
-    $dns_list)
-record_id=$(echo $domain_records| jq ".domain_records[] | select(.name == \"$NAME\") | .id")
-
-test -z $record_id && die "No record found with given domain name!"
 
 while ( true ); do
+    domain_records=$(curl -s -X GET \
+        -H "Content-Type: application/json" \
+        -H "Authorization: Bearer $DIGITALOCEAN_TOKEN" \
+        $dns_list)
+    record_id=$(echo $domain_records| jq ".domain_records[] | select(.type == \"A\" and .name == \"$NAME\") | .id")
+    
+    test -z $record_id && die "No record found with given domain name!"
+
     ip="$(curl -s ipinfo.io/ip)"
     data="{\"type\": \"A\", \"name\": \"$NAME\", \"data\": \"$ip\"}"
     url="$dns_list/$record_id"
