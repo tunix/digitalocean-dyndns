@@ -20,7 +20,7 @@ while ( true ); do
         -H "Authorization: Bearer $DIGITALOCEAN_TOKEN" \
         $dns_list)
     record_id=$(echo $domain_records| jq ".domain_records[] | select(.type == \"A\" and .name == \"$NAME\") | .id")
-    record_data=$(echo $domain_records| jq -r ".domain_records[] | select(.type == \"A\" and .name == \"@\") | .data")
+    record_data=$(echo $domain_records| jq -r ".domain_records[] | select(.type == \"A\" and .name == \"$NAME\") | .data")
     
     test -z $record_id && die "No record found with given domain name!"
 
