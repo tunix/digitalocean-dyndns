@@ -13,12 +13,13 @@ test -z $DOMAIN && die "DOMAIN not set!"
 test -z $NAME && die "NAME not set!"
 
 dns_list="$api_host/domains/$DOMAIN/records"
+dns_list_long="$api_host/domains/$DOMAIN/records?per_page=200"
 
 while ( true ); do
     domain_records=$(curl -s -X GET \
         -H "Content-Type: application/json" \
         -H "Authorization: Bearer $DIGITALOCEAN_TOKEN" \
-        $dns_list)
+        $dns_list_long)
     record_id=$(echo $domain_records| jq ".domain_records[] | select(.type == \"A\" and .name == \"$NAME\") | .id")
     record_data=$(echo $domain_records| jq -r ".domain_records[] | select(.type == \"A\" and .name == \"$NAME\") | .data")
     
