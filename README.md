@@ -14,7 +14,7 @@ Pick one of the options below using the following settings:
 
 * **DIGITALOCEAN_TOKEN:** The token you generate in DigitalOcean's API settings.
 * **DOMAIN:** The domain your subdomain is registered at. (i.e. `foo.com` for `home.foo.com`)
-* **NAME:** Subdomain to use. (name in A record) (i.e. `home` for `home.foo.com`)
+* **NAME:** Subdomain to use. (name in A record) (i.e. `home` for `home.foo.com`). Multiple subdomains must be separated by semicolons `;`
 * **SLEEP_INTERVAL:** Polling time in seconds. (default: 300)
 
 ### Docker (Recommended)
