@@ -18,7 +18,7 @@ while ( true ); do
     domain_records=$(curl -s -X GET \
         -H "Content-Type: application/json" \
         -H "Authorization: Bearer $DIGITALOCEAN_TOKEN" \
-        $dns_list)
+        $dns_list"?per_page=200")
 
     ip="$(curl -s ipinfo.io/ip)"
 
