@@ -20,7 +20,8 @@ while ( true ); do
         -H "Authorization: Bearer $DIGITALOCEAN_TOKEN" \
         $dns_list"?per_page=200")
 
-    ip="$(curl -s ifconfig.me)"
+    ip="$(curl -s ipinfo.io/ip)"
+    if [[ -z $ip ]]; then ip=$(curl -s ifconfig.me); fi
 
     if [[ -n $ip ]]; then
         for sub in ${NAME//;/ }; do
