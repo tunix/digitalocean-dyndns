@@ -3,6 +3,11 @@
 api_host="https://api.digitalocean.com/v2"
 sleep_interval=${SLEEP_INTERVAL:-300}
 
+services=(
+    "ipinfo.io/ip"
+    "ifconfig.me"
+)
+
 die() {
     echo "$1"
     exit 1
@@ -20,7 +25,13 @@ while ( true ); do
         -H "Authorization: Bearer $DIGITALOCEAN_TOKEN" \
         $dns_list"?per_page=200")
 
-    ip="$(curl -s ipinfo.io/ip)"
+    for service in ${services[@]}; do
+        echo "Trying with $service..."
+
+        ip="$(curl -s $service)"
+
+	test -n "$ip" && break
+    done
 
     if [[ -n $ip ]]; then
         for sub in ${NAME//;/ }; do
