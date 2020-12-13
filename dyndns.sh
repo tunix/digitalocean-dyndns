@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 api_host="https://api.digitalocean.com/v2"
 sleep_interval=${SLEEP_INTERVAL:-300}
