@@ -4,6 +4,7 @@ api_host="https://api.digitalocean.com/v2"
 sleep_interval=${SLEEP_INTERVAL:-300}
 
 services=(
+    "ifconfig.co"
     "ipinfo.io/ip"
     "ifconfig.me"
 )
@@ -29,9 +30,10 @@ while ( true ); do
         echo "Trying with $service..."
 
         ip="$(curl -s $service)"
-
-	test -n "$ip" && break
+        test -n "$ip" && break
     done
+    
+    echo "Found IP address $ip"
 
     if [[ -n $ip ]]; then
         for sub in ${NAME//;/ }; do
@@ -51,6 +53,8 @@ while ( true ); do
                     -H "Authorization: Bearer $DIGITALOCEAN_TOKEN" \
                     -d "$data" \
                     "$url" &> /dev/null
+            else
+                echo "existing DNS record address ($record_data) did not need updating"
             fi
         done
     else
