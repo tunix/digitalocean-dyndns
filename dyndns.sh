@@ -54,7 +54,7 @@ while ( true ); do
                     -d "$data" \
                     "$url" &> /dev/null
             else
-              echo "existing DNS record address ($record_data) did not need updating"
+                echo "existing DNS record address ($record_data) did not need updating"
             fi
         done
     else
