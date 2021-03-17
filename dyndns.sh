@@ -36,10 +36,16 @@ while ( true ); do
     echo "Found IP address $ip"
 
     if [[ -n $ip ]]; then
+        # disable glob expansion
+        set -f
+		
         for sub in ${NAME//;/ }; do
             record_id=$(echo $domain_records| jq ".domain_records[] | select(.type == \"A\" and .name == \"$sub\") | .id")
             record_data=$(echo $domain_records| jq -r ".domain_records[] | select(.type == \"A\" and .name == \"$sub\") | .data")
             
+            # re-enable glob expansion
+            set +f
+
             test -z $record_id && echo "No record found with '$sub' domain name!" && continue
 
             if [[ "$ip" != "$record_data" ]]; then
