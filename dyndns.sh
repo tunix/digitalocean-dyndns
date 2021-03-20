@@ -30,7 +30,8 @@ while ( true ); do
         echo "Trying with $service..."
 
         ip="$(curl -s $service)"
-        test -n "$ip" && break
+        valid_ip=$(echo $ip | grep '[0-9]\{1,3\}\(\.[0-9]\{1,3\}\)\{3\}')
+        test -n "$valid_ip" && break
     done
     
     echo "Found IP address $ip"
