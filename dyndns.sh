@@ -29,9 +29,8 @@ while ( true ); do
     for service in ${services[@]}; do
         echo "Trying with $service..."
 
-        ip="$(curl -s $service)"
-        valid_ip=$(echo $ip | grep '[0-9]\{1,3\}\(\.[0-9]\{1,3\}\)\{3\}')
-        test -n "$valid_ip" && break
+        ip="$(curl -s $service | grep '[0-9]\{1,3\}\(\.[0-9]\{1,3\}\)\{3\}')"
+        test -n "$ip" && break
     done
     
     echo "Found IP address $ip"
