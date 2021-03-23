@@ -51,11 +51,13 @@ while ( true ); do
 
             if [[ -z $record_id ]]; then
                 echo "No record found with '$sub' domain name. Creating record, sending data=$data to url=$url"
+
                 new_record=$(curl -s -X POST \
                     -H "Content-Type: application/json" \
                     -H "Authorization: Bearer $DIGITALOCEAN_TOKEN" \
                     -d "$data" \
                     "$url")
+
                 record_data=$(echo $new_record| jq -r ".data")
             fi
 
