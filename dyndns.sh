@@ -29,7 +29,7 @@ while ( true ); do
     for service in ${services[@]}; do
         echo "Trying with $service..."
 
-        ip="$(curl -s $service)"
+        ip="$(curl -s $service | grep '[0-9]\{1,3\}\(\.[0-9]\{1,3\}\)\{3\}')"
         test -n "$ip" && break
     done
     
@@ -45,13 +45,23 @@ while ( true ); do
             
             # re-enable glob expansion
             set +f
+            
+            data="{\"type\": \"A\", \"name\": \"$sub\", \"data\": \"$ip\"}"
+            url="$dns_list/$record_id"
 
-            test -z $record_id && echo "No record found with '$sub' domain name!" && continue
+            if [[ -z $record_id ]]; then
+                echo "No record found with '$sub' domain name. Creating record, sending data=$data to url=$url"
+
+                new_record=$(curl -s -X POST \
+                    -H "Content-Type: application/json" \
+                    -H "Authorization: Bearer $DIGITALOCEAN_TOKEN" \
+                    -d "$data" \
+                    "$url")
+
+                record_data=$(echo $new_record| jq -r ".data")
+            fi
 
             if [[ "$ip" != "$record_data" ]]; then
-                data="{\"type\": \"A\", \"name\": \"$sub\", \"data\": \"$ip\"}"
-                url="$dns_list/$record_id"
-
                 echo "existing DNS record address ($record_data) doesn't match current IP ($ip), sending data=$data to url=$url"
 
                 curl -s -X PUT \
