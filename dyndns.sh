@@ -14,6 +14,7 @@ die() {
     exit 1
 }
 
+test -f "$DIGITALOCEAN_TOKEN_FILE" && DIGITALOCEAN_TOKEN="$(cat $DIGITALOCEAN_TOKEN_FILE)"
 test -z $DIGITALOCEAN_TOKEN && die "DIGITALOCEAN_TOKEN not set!"
 test -z $DOMAIN && die "DOMAIN not set!"
 test -z $NAME && die "NAME not set!"
