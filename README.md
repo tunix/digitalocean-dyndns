@@ -16,6 +16,7 @@ Pick one of the options below using the following settings:
 * **DOMAIN:** The domain your subdomain is registered at. (i.e. `foo.com` for `home.foo.com`)
 * **NAME:** Subdomain to use. (name in A record) (i.e. `home` for `home.foo.com`). Multiple subdomains must be separated by semicolons `;`
 * **SLEEP_INTERVAL:** Polling time in seconds. (default: 300)
+* **REMOVE_DUPLICATES:** If set to `"true"`, removes extra DNS records if more than one A record is found on a subdomain. *Note that if this is not enabled, the script will NOT update subdomains with more than one A record* (default: false)
 
 ### Docker (Recommended)
 
@@ -26,6 +27,7 @@ $ docker run -d --name dyndns \
     -e DOMAIN="yourdomain.com" \
     -e NAME="subdomain" \
     -e SLEEP_INTERVAL=2 \
+    -e REMOVE_DUPLICATES="true" \
     tunix/digitalocean-dyndns
 ```
 
