@@ -61,6 +61,7 @@ while ( true ); do
               else :
                   echo "Unable to update '$sub' domain name as it has duplicate DNS records. Set REMOVE_DUPLICATES='true' to remove them."
                   continue
+              fi
             fi
 
             # re-enable glob expansion
