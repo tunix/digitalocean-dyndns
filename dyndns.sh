@@ -2,6 +2,7 @@
 
 api_host="https://api.digitalocean.com/v2"
 sleep_interval=${SLEEP_INTERVAL:-300}
+remove_duplicates=${REMOVE_DUPLICATES:-"false"}
 
 services=(
     "ifconfig.co"
@@ -33,20 +34,39 @@ while ( true ); do
         ip="$(curl -s $service | grep '[0-9]\{1,3\}\(\.[0-9]\{1,3\}\)\{3\}')"
         test -n "$ip" && break
     done
-    
+
     echo "Found IP address $ip"
 
     if [[ -n $ip ]]; then
         # disable glob expansion
         set -f
-		
+
         for sub in ${NAME//;/ }; do
             record_id=$(echo $domain_records| jq ".domain_records[] | select(.type == \"A\" and .name == \"$sub\") | .id")
             record_data=$(echo $domain_records| jq -r ".domain_records[] | select(.type == \"A\" and .name == \"$sub\") | .data")
-            
+
+            if [ $(echo "$record_id" | wc -l) -ge 2 ]; then :
+                if [[ "${remove_duplicates}" == "true" ]]; then :
+                    echo "'$sub' domain name has duplicate DNS records, removing duplicates"
+                    record_id_to_delete=$(echo "$record_id"| tail -n +2)
+                    record_id=$(echo "$record_id"| head -1)
+                    record_data=$(echo "$record_data"| head -1)
+
+                    while IFS= read -r line; do
+                        curl -s -X DELETE \
+                            -H "Content-Type: application/json" \
+                            -H "Authorization: Bearer $DIGITALOCEAN_TOKEN" \
+                            "$dns_list/$line" &> /dev/null
+                    done <<< "$record_id_to_delete"
+                else :
+                    echo "Unable to update '$sub' domain name as it has duplicate DNS records. Set REMOVE_DUPLICATES='true' to remove them."
+                    continue
+                fi
+            fi
+
             # re-enable glob expansion
             set +f
-            
+
             data="{\"type\": \"A\", \"name\": \"$sub\", \"data\": \"$ip\"}"
             url="$dns_list/$record_id"
 
